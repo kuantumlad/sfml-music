@@ -9,12 +9,16 @@ int main(){
 
 
   sf::SoundBuffer buffer;
-  if( !buffer.loadFromFile("//Users/bclary/Documents/work/codeprojects/music/lvb-sym-5-1.wav") ){
+  
+  //if( !buffer.loadFromFile("//Users/bclary/Documents/work/codeprojects/music/lvb-sym-5-1.wav") ){
+  if( !buffer.loadFromFile("/home/kuantumlad/Documents/projects/sfml-music/lvb-sym-5-1.wav") ){
     std::cout << " could not load song from file " << std::endl;
   }
 
+
   int channel_count = buffer.getChannelCount();
-  int sample_count = buffer.getSampleCount()/10000;
+  int sample_count_true=buffer.getSampleCount();
+  int sample_count = 10000;// buffer.getSampleCount()/10000;
   int sample_rate = buffer.getSampleRate();
   int duration = buffer.getDuration().asSeconds();
 
@@ -26,13 +30,7 @@ int main(){
   
   const sf::Int16 *sample = buffer.getSamples();
 
-  int windowX = 1000;
-  int windowY = 1000;
-  sf::Vector2i windowPos(0,0);
   
-  sf::RenderWindow window( sf::VideoMode(windowX,windowY,32),"DFT" );
-  window.setPosition(windowPos);
-
   //int max_sample_amp = -1;
   //int temp=-1;
   //for( int b = 0; b < sample_count; b++ ){
@@ -46,10 +44,10 @@ int main(){
 
 
 
-  int max_sample_amp = 29205;
-  int hamming_interval = 16432;
+  int max_sample_amp = 10000; //29205;
+  int hamming_interval = 10000;
   sf::VertexArray bufferLines(sf::LinesStrip,16324);
-  int zeroLevel = 50;
+  int zeroLevel = 500;
   int compressFactor = 10;
 
   int numTimeWindows=sample_count/16432;
@@ -58,29 +56,42 @@ int main(){
   
   std::map<int, sf::VertexArray > m_bufferLine;
   
-  int bufferWindowStart = 0;
-  int bufferWindowEnd = hamming_interval;
-  for( int i = 0; i < sample_count; i++ ){
+  int bufferWindowStart = 20000;//sample_count_true/2;
+  int bufferWindowEnd = 100;//hamming_interval;
 
-    sf::VertexArray temp_bufferLines(sf::LinesStrip,hamming_interval);
+  std::vector<sf::VertexArray> test_array;
+
+  std::cout << " loading information " << std::endl;
+  for( int i = bufferWindowStart; i < (bufferWindowStart + sample_count); i++ ){
+
+    sf::VertexArray temp_bufferLines(sf::LinesStrip,0);
     int temp_counter=0;
+
     for( int b=0; b < hamming_length; b++){
-      if( (i + b ) == sample_count ) break;
+      if( (i + b ) == sample_count ) continue;
       double norm_sample_amp = (double)sample[i+b]/(double)max_sample_amp * 100.0;
-      //std::cout << " norm sample " << zeroLevel + norm_sample_amp << std::endl;
-      temp_bufferLines[temp_counter].position = sf::Vector2f( temp_counter/10, zeroLevel + (int)norm_sample_amp);
+      //std::cout << " position "<<  temp_counter <<  " sample " <<  (double)sample[i+b] <<  " norm sample " << zeroLevel + norm_sample_amp << std::endl;
+
+      //temp_bufferLines[temp_counter].position = sf::Vector2f( temp_counter, zeroLevel + (int)norm_sample_amp);
+      temp_bufferLines.append( sf::Vector2f( temp_counter/10, zeroLevel + (int)norm_sample_amp) );
+
+      //std::cout << " >> position " << temp_bufferLines[temp_counter].position.x << " y pos "  << temp_bufferLines[temp_counter].position.y <<  std::endl;
       temp_counter++;
-      std::cout << " >> on sample " << (i + b) << std::endl;
+      //std::cout << " >> on sample " << (i + b) << " " << temp_bufferLines.getVertexCount() << std::endl;
     }
     //bufferWindowStart=bufferWindowEnd;
     //bufferWindowEnd=bufferWindowEnd + hamming_interval;
     
     m_bufferLine[i]=temp_bufferLines;
     //std::cout<< " >> buffer start " << bufferWindowStart << " buffer end " << bufferWindowEnd << std::endl;
-
+    //std::cout << " size of VA " << m_bufferLine[0].getVertexCount() << std::endl;
+    test_array.push_back(temp_bufferLines);
+    
   }
 
-
+  std::cout << " buffer line size " << m_bufferLine.size() << std::endl;
+  std::cout << " test buffer lines size " << test_array[0].getVertexCount() << std::endl;
+  
   std::vector<int> v_small;
   std::vector<int> v_big;
 
@@ -92,17 +103,23 @@ int main(){
   int number_of_div=v_big.size();
   int index = 0;
   int shift=0;
-  for( int i=0; i < number_of_div; i++ ){
+  //for( int i=0; i < number_of_div; i++ ){
     //std::cout << " on segment " << i << std::endl;
-    for( int j = 0; j < small_size; j++ ){
-      if( (i+j) == v_big.size() ) break;
+    //for( int j = 0; j < small_size; j++ ){
+      //if( (i+j) == v_big.size() ) break;
       //std::cout << " >>  " << v_big[j + i] << std::endl;
-    }
+  //}
 
-  }
+  //}
     
 
+  int windowX = 1000;
+  int windowY = 1000;
+  sf::Vector2i windowPos(0,0);
   
+  sf::RenderWindow window( sf::VideoMode(windowX,windowY,32),"DFT" );
+  window.setPosition(windowPos);
+
 
   sf::Clock clock; // starts the clock
   
@@ -112,12 +129,24 @@ int main(){
   int tempt = 0;
   int deltat = 1;
   double tempt2=0.0;
+
+  sf::Music music;
+  if (!music.openFromFile("/home/kuantumlad/Documents/projects/sfml-music/lvb-sym-5-1.wav")){
+    std::cout << " ERROR LOADING MUSIC FILE " << std::endl;
+    sf::sleep(sf::seconds(5));
+    return -1; // error
+  }
+  music.play();
+  
   while(window.isOpen()){
     sf::Event event;
 
     while( window.pollEvent(event) ){
+
+      
       if( event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) ){
 	window.close();
+	music.stop();
       }
     }
     
@@ -125,27 +154,44 @@ int main(){
     double time_elapsed1 = elapsed1.asSeconds();
     //std::cout << elapsed1.asSeconds() << std::endl;
 
-    tempt=tempt+deltat;
+    //tempt=tempt+deltat;
     //std::cout << " >> " << tempt << std::endl;
     bool testtemp = tempt == 100000;
     //std::cout << " >> BOOLEAN TEST "<< testtemp << std::endl;
-    if( tempt == 10000 ){
+    //if( tempt == 10000 ){
     
-      //      std::cout<< ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> >> tempt  " << tempt << std::endl;
+    //std::cout<< ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> >> tempt  " << tempt << std::endl;
       //if( elapsed1.asSeconds() > duration ){
       //i=0;
       //}
       //clock.restart();
-      tempt=0;
+    
+    //if ( i == m_bufferLine.size() ) i = 0;
+      
       window.clear(sf::Color::Black);          
 
 
-      window.draw(m_bufferLine[i]);
+      //std::cout << " buffer position " << m_bufferLine[i][0].position.x << " y pos " << m_bufferLine[i][0].position.y << std::endl;
+      //window.draw(m_bufferLine[i]);
+      if( tempt == 100 ){	
+	if( i < test_array.size() ){
+	  std::cout << " draw " << i << std::endl;
 
+	  window.draw(test_array[i]);
+	        window.display();
 
-      window.display();
-      i++;  
-    }
+	}
+	else{
+	  i = 0;
+	}
+	tempt=0;
+	i++;
+      }
+	
+       
+      //}
+      tempt++;
+    
 
 
     
