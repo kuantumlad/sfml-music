@@ -10,15 +10,15 @@ int main(){
 
   sf::SoundBuffer buffer;
   
-  //if( !buffer.loadFromFile("//Users/bclary/Documents/work/codeprojects/music/lvb-sym-5-1.wav") ){
-  if( !buffer.loadFromFile("/home/kuantumlad/Documents/projects/sfml-music/lvb-sym-5-1.wav") ){
+  if( !buffer.loadFromFile("//Users/bclary/Documents/work/codeprojects/music/lvb-sym-5-1.wav") ){
+    //if( !buffer.loadFromFile("/home/kuantumlad/Documents/projects/sfml-music/lvb-sym-5-1.wav") ){
     std::cout << " could not load song from file " << std::endl;
   }
 
 
   int channel_count = buffer.getChannelCount();
   int sample_count_true=buffer.getSampleCount();
-  int sample_count = 10000;// buffer.getSampleCount()/10000;
+  int sample_count = buffer.getSampleCount()/10000;
   int sample_rate = buffer.getSampleRate();
   int duration = buffer.getDuration().asSeconds();
 
@@ -45,19 +45,19 @@ int main(){
 
 
   int max_sample_amp = 10000; //29205;
-  int hamming_interval = 10000;
+  int hamming_interval = 100;
   sf::VertexArray bufferLines(sf::LinesStrip,16324);
   int zeroLevel = 500;
   int compressFactor = 10;
 
   int numTimeWindows=sample_count/16432;
-  int hamming_length = 1000;
+  int hamming_length = 100;
   std::cout << " Number of time windows of 16432 buffer samples is " << numTimeWindows << std::endl;
   
   std::map<int, sf::VertexArray > m_bufferLine;
   
-  int bufferWindowStart = 20000;//sample_count_true/2;
-  int bufferWindowEnd = 100;//hamming_interval;
+  int bufferWindowStart = 0;//sample_count_true/2;
+  int bufferWindowEnd = 1000;//hamming_interval;
 
   std::vector<sf::VertexArray> test_array;
 
@@ -131,13 +131,18 @@ int main(){
   double tempt2=0.0;
 
   sf::Music music;
-  if (!music.openFromFile("/home/kuantumlad/Documents/projects/sfml-music/lvb-sym-5-1.wav")){
-    std::cout << " ERROR LOADING MUSIC FILE " << std::endl;
+  //if (!music.openFromFile("/home/kuantumlad/Documents/projects/sfml-music/lvb-sym-5-1.wav")){
+  if( !music.openFromFile("//Users/bclary/Documents/work/codeprojects/music/lvb-sym-5-1.wav")) {
+     std::cout << " ERROR LOADING MUSIC FILE " << std::endl;
     sf::sleep(sf::seconds(5));
     return -1; // error
   }
   music.play();
-  
+
+
+  int b = 0;
+  sf::VertexArray temp_bufferLines(sf::LinesStrip,0);
+
   while(window.isOpen()){
     sf::Event event;
 
@@ -170,32 +175,44 @@ int main(){
       
       window.clear(sf::Color::Black);          
 
-
+      
+      
+      //while ( i < 1000 ){
+      b=0;
+      while( b < 10000 ){
+	double norm_sample_amp = (double)sample[shift+b]/(double)max_sample_amp * 100.0;
+	temp_bufferLines.append( sf::Vector2f( b/10, 500 + (int)norm_sample_amp) );
+	b++;
+      }
+      window.draw(temp_bufferLines);
+      window.display();
+      shift=shift+100;
+      temp_bufferLines.clear();
+      //}
+      
       //std::cout << " buffer position " << m_bufferLine[i][0].position.x << " y pos " << m_bufferLine[i][0].position.y << std::endl;
       //window.draw(m_bufferLine[i]);
-      if( tempt == 100 ){	
-	if( i < test_array.size() ){
-	  std::cout << " draw " << i << std::endl;
+      //if( tempt == 1 ){	
+      //	if( i < test_array.size() ){
+      //	  std::cout << " draw " << i << std::endl;
 
-	  window.draw(test_array[i]);
-	        window.display();
+      //  window.draw(test_array[i]);
 
-	}
-	else{
-	  i = 0;
-	}
-	tempt=0;
-	i++;
-      }
+      //}
+      //else{
+      //  i = 0;
+      //}
+      //tempt=0;
+      //i++;
+	//}
 	
        
       //}
-      tempt++;
-    
+      //tempt++;
 
 
-    
-    time2_elapsed=elapsed1.asSeconds();
+      
+      //time2_elapsed=elapsed1.asSeconds();
     
           
   }
