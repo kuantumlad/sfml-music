@@ -1,8 +1,9 @@
-#include "Histogram.hh"
+#include "../include/Histogram.hh"
+#include "../include/Bars.hh"
+
 #include <vector>
 #include <iostream>
 #include <cmath>
-#include "Bars.hh"
 
 #include <SFML/Graphics.hpp>
 
@@ -28,15 +29,15 @@ void Histogram::setBinRangeMin(double min){
 
 }
 
-void Histogram::initHistogram2(int bins, double min, double max, double x_scale){
+void Histogram::initHistogram(int bins, double min, double max, double x_scale){
 
   double resolution = (max - min)/(double)bins;
   double x_norm = 1.0;
-  std::cout << " second init histo test " << resolution << std::endl;
+  //std::cout << " second init histo test " << resolution << std::endl;
   
   for( int b = 0 ; b < bins; b++ ){
-    std::cout << " freq " << b*resolution << std::endl;
-    std::cout << " bar position " << b*resolution/x_norm << std::endl;
+    //std::cout << " freq " << b*resolution << std::endl;
+    //std::cout << " bar position " << b*resolution/x_norm << std::endl;
     Bars *bar = new Bars();
 
     freq_ranges.push_back( b*resolution );

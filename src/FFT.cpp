@@ -1,4 +1,4 @@
-#include "FFT.hh"
+#include "../include/FFT.hh"
 #include <cmath>
 #include <complex>
 #include <cstdio>

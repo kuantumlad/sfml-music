@@ -1,4 +1,4 @@
-#include "Bars.hh"
+#include "../include/Bars.hh"
 #include <vector>
 #include <map>
 #include <iostream>

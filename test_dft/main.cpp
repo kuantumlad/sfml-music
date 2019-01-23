@@ -140,3 +140,45 @@ int main(){
   return 0;
 
 }
+
+
+  //fft2.getFFT(X,sample_count);
+
+  /*const int nSamples = 2049 ;// soundManager.getSampleCount();//sample_count;
+  double nSeconds = 1.0;                      // total time for sampling
+  double sampleRate = nSamples / nSeconds;    // n Hz = n / second
+  double freqResolution = sampleRate / nSamples; // freq step in FFT result
+  std::complex<double> x[nSamples];                // storage for sample data
+  std::complex<double> X[nSamples];                // storage for FFT answer
+  const int nFreqs = 5;
+  double freq[nFreqs] = { 2, 8, 14, 22, 30 }; // known freqs for testing
+
+  // generate samples for testing
+  for(int i=0; i<nSamples; i++) {
+    x[i] = std::complex<double>(0.,0.);
+    // sum several known sinusoids into x[]
+    for(int j=0; j<nFreqs; j++)
+      x[i] += sin( 2*M_PI*freq[j]*i/nSamples );
+    X[i] = x[i];        // copy into X[] for FFT work & result
+  }
+  */
+  
+//-----------------------------------------------------
+
+// For the main main.cpp class removed print out statement
+
+	  //temp_freqLines.append( sf::Vector2f( x_scale*(s*sample_rate/(index_window2 )) , windowY - std::abs(Xtemp[s])) );
+	  //temp_freqLines[s-1].color = sf::Color::Red;
+	  //std::cout << " precise frequency " << s*sample_rate/(index_window2 * 10) << std::endl;
+	  //std::cout << " rounded frequency " << (int)(s*sample_rate/(index_window2 * 10)) << std::endl;
+	  //int sampled_freq = (int)(s*sample_rate/(index_window2 * 10.0));
+	  //std::cout << " value  in main loop is " << 100.0*std::abs(Xtemp[s]) << std::endl;
+	  //fftHist.getData()[s]->setBarHeight(windowY - 1000*std::abs(Xtemp[s]));
+	  //fftHist.getData()[s]->updateBarSize();
+
+	  //std::cout << " >> s " << s << " " << X[s] << " " << std::abs(Xtemp[s]) << " " << s*(1.0/(freq_res)) << std::endl;
+
+//window.draw(temp_freqLines);
+	//}
+		//temp_freqLines.clear();     
+

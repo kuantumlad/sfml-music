@@ -29,7 +29,7 @@ public:
   void setBinRangeMax(double);
   void setBinRangeMin(double);
   void initHistogram(int,double,double,double,double);
-  void initHistogram2(int,double,double,double);
+  void initHistogram(int,double,double,double);
   void setData(std::map<int,double>);
   void setBinContent(int, double);
   void setBinContentByRange(int, double);

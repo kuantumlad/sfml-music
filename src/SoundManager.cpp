@@ -1,4 +1,4 @@
-#include "SoundManager.hh"
+#include "../include/SoundManager.hh"
 #include <vector>
 #include <iostream>
 
