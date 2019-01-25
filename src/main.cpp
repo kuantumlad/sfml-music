@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 #include <vector>
 #include <map>
 #include <math.h>
@@ -66,7 +67,7 @@ int main(){
   // multiplicative factor for scaling the x axis bars to make it look visually appealing
   double x_scale = 1.0/10.0;
   // Arguments used to init histograms are arbitrary and basedo on what looks "good"
-  fftHist.initHistogram(index_window/20, 1.0, 8000.0, x_scale);
+  fftHist.initHistogram(index_window/40, 1.0, 4000.0, x_scale,"vertexarray"); // use 8000 for rectangleshape
     
   double freq = (261.0)*x_scale;
   sf::VertexArray temp_freqLines(sf::LinesStrip,0);
@@ -84,6 +85,10 @@ int main(){
   // update_time value is based on the FFT window size
   double update_time = ((double)sample_duration/(double)sample_count) * index_window2 / 2.;
   soundManager.playSound();
+
+  // Code to capture screenshot of the window
+  sf::Vector2u windowSize = window.getSize();
+  std::vector<sf::Image> frameshots;
 
   while(window.isOpen()){
     sf::Event event;
@@ -104,7 +109,7 @@ int main(){
     total_elapsed_time = elapsed2.asSeconds();
     
     //windowing indices
-    if(  elapsedtime > update_time ){ 
+    if( elapsedtime > update_time ){ 
       if( index_max < sample_count){
 
 	index_min = index_max;
@@ -121,7 +126,7 @@ int main(){
 	// note: must use fft rather than dft due to dft is of O(n2)
 	fft2.getFFT(Xtemp,index_window);           
 	for( int s = 1; s < index_window/2; s++ ){
-	  fftHist.setBinContentByRange( (int)(s*sample_rate/(index_window2)), -1.0*(std::abs(Xtemp[s])));
+	  fftHist.setVBinContentByRange( (int)(s*sample_rate/(index_window2)), -1.0*(std::abs(Xtemp[s])));
 	}
 	
 	elapsedtime = 0.0;
@@ -130,6 +135,13 @@ int main(){
 	window.draw(trueFreqLines);
 	window.draw(fftHist);
 	window.display();
+
+	//sf::Texture texture;
+	//texture.create(windowSize.x, windowSize.y);       
+	//texture.update(window);
+	//sf::Image screenshot = texture.copyToImage();
+	//frameshots.push_back(screenshot);
+	
       }    
       else{
 	index_min = sample_count - index_window;
@@ -138,7 +150,13 @@ int main(){
     }    
   }
 
-  std::cout <<  " done  " << std::endl;
+  //Save on of the images to png file
+  std::cout << "--> Window Closed " << std::endl;
+  //for( int i = 0; i < frameshots.size(); i++ ){
+  //  if( !frameshots[i].saveToFile("fft_frame"+std::to_string(i)+".png") ) std::cout << " error " << std::endl;
+  //}
+  
+  std::cout << "--> Closing program  " << std::endl;
   
   return 0;
 

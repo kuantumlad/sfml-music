@@ -26,6 +26,7 @@ void Bars::initBar( double posx, double posy, double width, double height, sf::C
 }
 
 
+
 void Bars::setBarHeight(double height){
 
   //bar_size.y = height;
@@ -54,7 +55,7 @@ double Bars::getBarHeight(){
 }
 
 
-void Bars::setBarColor(std::vector<sf::Color> color){
+ void Bars::setBarColor(std::vector<sf::Color> color){
 
 
 }
@@ -77,3 +78,5 @@ sf::RectangleShape Bars::getBar(){
   return bar;
 
 }
+
+
