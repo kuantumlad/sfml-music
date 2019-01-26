@@ -15,12 +15,12 @@
 
 int main(){
 
-  std::cout << " starting program " << std::endl;
+  std::cout << " --> Starting program " << std::endl;
 
 
   // Initialize window details
-  int windowX = 800;
-  int windowY = 800;
+  int windowX = 1000;
+  int windowY = 1000;
   sf::Vector2i windowPos(0,0);
   sf::RenderWindow window( sf::VideoMode(windowX,windowY,32),"DFT" ); 
   window.setPosition(windowPos);
@@ -28,7 +28,7 @@ int main(){
   // Load sound file from data
   // Here we load a simple middle c note played on a piano. It's frequency is 261 Hz.
   SoundManager soundManager;
-  soundManager.loadSound("/Users/bclary/Documents/work/codeprojects/music/sounds/95328__ramas26__c.wav");
+  soundManager.loadSound("/Users/bclary/Documents/work/codeprojects/music/sounds/lvb-sym-5-1.wav");//95328__ramas26__c.wav");
 
   // Get wav file specs
   const int sample_count = soundManager.getSampleCount();
@@ -36,7 +36,7 @@ int main(){
   double sample_duration = soundManager.getSampleDuration();
   double freq_res = (double)sample_rate/(double)soundManager.getSampleCount();
 
-  std::cout << " SOUND FILE INFORMATION " << std::endl;
+  std::cout << " -- SOUND FILE INFORMATION -- " << std::endl;
   std::cout << " --> Sample duration          " << sample_duration << "seconds" << std::endl;
   std::cout << " --> Frequency resolution is  " << freq_res << " Hz " << std::endl;
  
@@ -65,9 +65,9 @@ int main(){
   double x_norm = 10.0;
   double bin_resolution = sample_rate/(index_window2 * x_norm);
   // multiplicative factor for scaling the x axis bars to make it look visually appealing
-  double x_scale = 1.0/10.0;
+  double x_scale = 1.0/5.0;
   // Arguments used to init histograms are arbitrary and basedo on what looks "good"
-  fftHist.initHistogram(index_window/40, 1.0, 4000.0, x_scale,"vertexarray"); // use 8000 for rectangleshape
+  fftHist.initHistogram(index_window/10, 0, windowY, 1.0, 6000.0, x_scale,"vertexarray"); // use 8000 for rectangleshape
     
   double freq = (261.0)*x_scale;
   sf::VertexArray temp_freqLines(sf::LinesStrip,0);
@@ -83,7 +83,7 @@ int main(){
   double elapsedtime = 0.0;
   double total_elapsed_time = 0.0;
   // update_time value is based on the FFT window size
-  double update_time = ((double)sample_duration/(double)sample_count) * index_window2 / 2.;
+  double update_time = ((double)sample_duration/(double)sample_count) * index_window2 / 2. + 0.021;
   soundManager.playSound();
 
   // Code to capture screenshot of the window
@@ -151,22 +151,13 @@ int main(){
   }
 
   //Save on of the images to png file
-  std::cout << "--> Window Closed " << std::endl;
+  std::cout << " --> Window Closed " << std::endl;
   //for( int i = 0; i < frameshots.size(); i++ ){
   //  if( !frameshots[i].saveToFile("fft_frame"+std::to_string(i)+".png") ) std::cout << " error " << std::endl;
   //}
   
-  std::cout << "--> Closing program  " << std::endl;
+  std::cout << " --> Closing program  " << std::endl;
   
   return 0;
 
 }
-
-
-
-
-
-
-
-
-

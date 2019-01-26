@@ -26,21 +26,22 @@ public:
   std::string histo_type;
 
   std::map<int, VBars*> map_vdata;
-  std::map<int,Bars*> map_data;
+  std::map<int, Bars*> map_data;
   std::vector<double> freq_ranges;
 
   void setNumberOfBins(int);
   void setBinRangeMax(double);
   void setBinRangeMin(double);
-  void initHistogram(int,double,double,double,double);
-  void initHistogram(int,double,double,double);
-  void initHistogram(int,double,double,double, std::string);
-  void setData(std::map<int,double>);
+  void initHistogram(int, double, double, double, double);
+  void initHistogram(int, double, double, double);
+  void initHistogram(int, double, double, double, double, double, std::string);
+  void setData(std::map<int, double>);
   void setBinContent(int, double);
   void setVBinContent(int, double);
   void setBinContentByRange(int, double);
   void setVBinContentByRange(int, double);
   void rebinContent(int);
+  sf::Color getFreqColor(double);
   std::map<int, Bars*> getData();
   sf::RectangleShape getHistogram();
   void draw(sf::RenderTarget&, sf::RenderStates) const;

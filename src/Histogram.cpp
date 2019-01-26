@@ -31,7 +31,8 @@ void Histogram::setBinRangeMin(double min){
 
 }
 
-void Histogram::initHistogram(int bins, double min, double max, double x_scale, std::string temp_histo_type){
+
+void Histogram::initHistogram(int bins, double x_start, double y_start, double min, double max, double x_scale, std::string temp_histo_type){
 
   double resolution = (max - min)/(double)bins;
   double x_norm = 1.0;
@@ -51,14 +52,12 @@ void Histogram::initHistogram(int bins, double min, double max, double x_scale, 
 
     if( temp_histo_type == "rectangle" ){
       Bars *bar = new Bars();      
-      //bar->initBar( ((b*resolution/x_norm)), 800.0, resolution/x_norm, 0.0, sf::Color::White);
-      bar->initBar( x_scale*(b*(resolution/x_norm)), 800.0, resolution*x_scale, 0.0, sf::Color::White);
+      bar->initBar( x_start + x_scale*(b*(resolution/x_norm)), y_start, resolution*x_scale, 0.0, getFreqColor(b*(resolution/x_norm)));//sf::Color::White);
       map_data[b] = bar;
     }
     else if( temp_histo_type == "vertexarray" ){
       VBars *vbar = new VBars();
-      vbar->initVBar( x_scale*(b*(resolution/x_norm)), 800.0, resolution*x_scale, 0.0, sf::Color::White);
-      //vbar->initVBar( ((b*resolution/x_norm)), 800.0, resolution/x_norm, 0.0, sf::Color::White);
+      vbar->initVBar( x_start + x_scale*(b*(resolution/x_norm)), y_start, resolution*x_scale, 0.0, getFreqColor(b*(resolution/x_norm)));
       map_vdata[b] = vbar;
     }
   
@@ -90,8 +89,6 @@ void Histogram::initHistogram(int bins, double min, double max, double x_scale, 
 
 void Histogram::initHistogram(int bins, double sample_rate, double sample_buffer_window, double x_norm, double bin_resolution){
 
-  //histo_type=temp_histo_type;
-  //double resolution = (max - min)/(double)bins;
   double resolution = bin_resolution;//sample_rate/(4096.0 * x_norm);
   
   std::cout << " resl first " << resolution << std::endl;
@@ -99,17 +96,9 @@ void Histogram::initHistogram(int bins, double sample_rate, double sample_buffer
 
     double posx = (b*resolution/x_norm);    
     bin_size = b*resolution;
-    //if( histo_type == "rectangle" ){
     Bars *bar = new Bars();      
     bar->initBar( ((b*resolution/x_norm)), 800.0, resolution/x_norm, 0.0, sf::Color::White);
     map_data[b] = bar;
-    //}
-    //else if( histo_type == "vertexarray" ){
-    //VBars *vbar = new VBars();      
-    //vbar->initVBar( ((b*resolution/x_norm)), 800.0, resolution/x_norm, 0.0, sf::Color::White);
-    //map_vdata[b] = vbar;
-    //}
-
   }
 }
 
@@ -188,6 +177,36 @@ void Histogram::rebinContent(int rebin_size ){
 std::map<int,Bars*> Histogram::getData(){
 
   return map_data;
+
+}
+
+sf::Color Histogram::getFreqColor(double freq ){
+
+  // 0 -   32 Range 1
+  // 32 -  512 Range 2
+  // 512 - 2048 Range 3
+  // 2048 - 8192 Range 4
+  // 8192 - 16384 Range 5
+
+  sf::Color freq_color = sf::Color::White;
+  
+  if( freq <= 32 ){
+    freq_color = sf::Color::White;
+  }
+  else if( freq > 32 && freq <= 512 ){
+    freq_color = sf::Color::Blue;
+  }
+  else if( freq > 512 && freq <= 2048 ){
+    freq_color = sf::Color::Green;
+  }
+  else if( freq > 2048 && freq <= 8192 ){
+    freq_color = sf::Color::Magenta;    
+  }
+  else if( freq > 8192 && freq <= 16384 ){
+    freq_color = sf::Color::Yellow;
+  }
+    
+  return freq_color;
 
 }
 
